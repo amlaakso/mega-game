@@ -21,16 +21,38 @@ impl Player {
             velocity: 0.0,
         }
     }
+
+    fn render(&mut self, ctx: &mut BTerm) {
+        ctx.set(0, self.y, YELLOW, BLACK, to_cp437('@'));
+    }
+
+    fn grav_and_move(&mut self) {
+        if self.velocity < 2.0 {
+            self.velocity += 0.2;
+        }
+        self.y += self.velocity as i32;
+        self.x += 1;
+        if self.y < 0 {
+            self.y = 0;
+        }
+    }
+
+    fn flap(&mut self) {
+        self.velocity -= 2.0;
+    }
 }
 
 #[derive(Debug)]
 struct State {
+    player: Player,
+    frame_time: f32,
     mode: GameMode,
 }
 
 impl State {
     fn new() -> Self {
         State {
+            player: Player::new(5, 25),
             mode: GameMode::Menu,
         }
     }
